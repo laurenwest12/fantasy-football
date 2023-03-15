@@ -49,7 +49,9 @@ const getPlayers = async () => {
     const playerData = data[playerId];
     const { position, active } = playerData;
     if (process.env.POSITIONS.includes(position) && active) {
+      delete playerData.metadata;
       players.push({
+        id: playerId,
         ...playerData,
         personal_tier: 0,
         ringer_tier: 0,
@@ -63,6 +65,9 @@ const getPlayers = async () => {
         personal_ranking: 0,
         ringer_ranking: 0,
         fp_ranking: 0,
+        personal_pos_ranking: 0,
+        ringer_pos_ranking: 0,
+        fp_pos_ranking: 0,
       });
     }
   }

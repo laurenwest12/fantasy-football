@@ -11,9 +11,11 @@
     "express": "^4.18.2",
     "http-proxy-middleware": "^2.0.6",
     "nodemon": "^2.0.21",
+    "pg": "^8.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "sequelize": "^6.29.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
