@@ -150,6 +150,9 @@ const Player = db.define('player', {
   fp_tier: {
     type: Sequelize.INTEGER,
   },
+  bs_tier: {
+    type: Sequelize.INTEGER,
+  },
   personal_pos_tier: {
     type: Sequelize.INTEGER,
   },
@@ -159,13 +162,10 @@ const Player = db.define('player', {
   fp_pos_tier: {
     type: Sequelize.INTEGER,
   },
+  bs_pos_tier: {
+    type: Sequelize.INTEGER,
+  },
   bye: {
-    type: Sequelize.INTEGER,
-  },
-  adp: {
-    type: Sequelize.INTEGER,
-  },
-  ecr: {
     type: Sequelize.INTEGER,
   },
   personal_ranking: {
@@ -177,6 +177,9 @@ const Player = db.define('player', {
   fp_ranking: {
     type: Sequelize.INTEGER,
   },
+  bs_ranking: {
+    type: Sequelize.INTEGER,
+  },
   personal_pos_ranking: {
     type: Sequelize.INTEGER,
   },
@@ -184,6 +187,21 @@ const Player = db.define('player', {
     type: Sequelize.INTEGER,
   },
   fp_pos_ranking: {
+    type: Sequelize.INTEGER,
+  },
+  bs_pos_ranking: {
+    type: Sequelize.INTEGER,
+  },
+  fp_adp: {
+    type: Sequelize.INTEGER,
+  },
+  fp_ecr: {
+    type: Sequelize.INTEGER,
+  },
+  bs_adp: {
+    type: Sequelize.INTEGER,
+  },
+  bs_ecr: {
     type: Sequelize.INTEGER,
   },
 });

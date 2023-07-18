@@ -8,4 +8,5 @@ const { syncAndSeed } = require('./db/seed');
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
+  await syncAndSeed();
 });
