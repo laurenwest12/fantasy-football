@@ -147,7 +147,7 @@ const syncAndSeed = async () => {
   // await db.sync({ force: true });
   // await insertPlayers();
   // await insertPicks();
-  await insertFPData();
+  // await insertFPData();
   // await insertRingerData();
 };
 
