@@ -185,6 +185,46 @@ const insertOtherRankingData = async () => {
   }
 };
 
+const calculateAvg = async () => {
+  const players = await Player.findAll();
+  for (let player of players) {
+    let total_ranking = 0;
+    let num_ranking = 0;
+    const {
+      personal_ranking,
+      ringer_ranking,
+      fp_ranking,
+      bs_ranking,
+      espn_ranking,
+      nfl_ranking,
+      yahoo_ranking,
+    } = player;
+
+    total_ranking +=
+      personal_ranking +
+      ringer_ranking +
+      fp_ranking +
+      bs_ranking +
+      espn_ranking +
+      nfl_ranking +
+      yahoo_ranking;
+
+    if (personal_ranking) num_ranking++;
+    if (ringer_ranking) num_ranking++;
+    if (fp_ranking) num_ranking++;
+    if (bs_ranking) num_ranking++;
+    if (espn_ranking) num_ranking++;
+    if (nfl_ranking) num_ranking++;
+    if (yahoo_ranking) num_ranking++;
+
+    let avg_ranking = Math.floor(total_ranking / num_ranking);
+    if (!avg_ranking) avg_ranking = 0;
+    player.update({
+      avg_ranking: avg_ranking,
+    });
+  }
+};
+
 const syncAndSeed = async () => {
   await db.authenticate();
   // await db.sync({ force: true });
@@ -193,6 +233,7 @@ const syncAndSeed = async () => {
   // await insertFPData();
   // await insertRingerData()
   // await insertOtherRankingData();
+  await calculateAvg();
 };
 
 module.exports = {

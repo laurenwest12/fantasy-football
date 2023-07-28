@@ -6,9 +6,9 @@ const playerController = {
     try {
       const players = await Player.findAll({
         where: {
-          fp_ranking: { [Op.ne]: 0 },
+          avg_ranking: { [Op.ne]: 0 },
         },
-        order: [['fp_ranking', 'ASC']],
+        order: [['avg_ranking', 'ASC']],
       });
       res.json(players);
     } catch (err) {
