@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const Papa = require('papaparse');
+const { Op } = require('sequelize');
 
 const db = require('./db');
 const { Pick, Player } = require('./models/index');
@@ -61,7 +62,6 @@ const insertRingerData = async () => {
         await player.update({
           ringer_pos_tier: tier,
           ringer_ranking: rank,
-          ringer_pos_ranking: pos_ranking,
         });
       } catch (err) {
         errors.push({
@@ -127,7 +127,6 @@ const insertFPData = async () => {
         } else if (player) {
           await player.update({
             fp_pos_tier: TIERS,
-            fp_pos_ranking: RK,
           });
         } else {
           playersNotFound.push({
@@ -142,13 +141,58 @@ const insertFPData = async () => {
   }
 };
 
+const insertOtherRankingData = async () => {
+  const files = fs
+    .readdirSync(path.resolve(__dirname, '../data'))
+    .filter((file) => file.indexOf('Fantasy Rankings') !== -1);
+
+  const filename = files[0];
+  const csv = fs.readFileSync(
+    path.resolve(__dirname, `../data/${filename}`),
+    'utf8'
+  );
+  const { data } = Papa.parse(csv, {
+    header: true,
+  });
+
+  for (let row of data) {
+    let { nflName, NFL, Yahoo, ESPNppr } = row;
+
+    nflName = nflName.replace(' Jr.', '');
+    nflName = nflName.replace(' III', '');
+    nflName = nflName.replace(' II', '');
+    nflName = nflName.replace(' D/ST', '');
+    nflName = nflName.replace(' IR', '');
+    nflName = nflName.replace(' Sr.', '');
+
+    const player = await Player.findOne({
+      where: {
+        full_name: {
+          [Op.like]: '%' + nflName + '%',
+        },
+      },
+    });
+
+    if (player) {
+      let updateObj = {};
+      if (NFL && NFL !== '#N/A') updateObj.nfl_ranking = NFL.replace(',', '');
+      if (Yahoo && Yahoo !== '#N/A')
+        updateObj.yahoo_ranking = Yahoo.replace(',', '');
+      if (ESPNppr && ESPNppr !== '#N/A')
+        updateObj.espn_ranking = ESPNppr.replace(',', '');
+      await player.update(updateObj);
+    }
+  }
+};
+
 const syncAndSeed = async () => {
   await db.authenticate();
   // await db.sync({ force: true });
   // await insertPlayers();
   // await insertPicks();
   // await insertFPData();
-  // await insertRingerData();
+  // await insertRingerData()
+  // await insertOtherRankingData();
 };
 
 module.exports = {
