@@ -46,8 +46,13 @@ const getPlayers = async () => {
   const { data } = await axios.get(`https://api.sleeper.app/v1/players/nfl`);
   const players = [];
   for (let playerId in data) {
-    const playerData = data[playerId];
+    let playerData = data[playerId];
     const { position, active } = playerData;
+    if (position === 'DEF') {
+      playerData[
+        'full_name'
+      ] = `${playerData.first_name} ${playerData.last_name}`;
+    }
     if (process.env.POSITIONS.includes(position) && active) {
       delete playerData.metadata;
       players.push({
@@ -56,18 +61,30 @@ const getPlayers = async () => {
         personal_tier: 0,
         ringer_tier: 0,
         fp_tier: 0,
+        bs_tier: 0,
+        avg_tier: 0,
         personal_pos_tier: 0,
         ringer_pos_tier: 0,
         fp_pos_tier: 0,
+        bs_pos_tier: 0,
+        avg_pos_tier: 0,
         bye: 0,
-        adp: 0,
-        ecr: 0,
         personal_ranking: 0,
         ringer_ranking: 0,
         fp_ranking: 0,
+        bs_ranking: 0,
+        avg_ranking: 0,
         personal_pos_ranking: 0,
         ringer_pos_ranking: 0,
         fp_pos_ranking: 0,
+        bs_pos_ranking: 0,
+        avg_pos_ranking: 0,
+        fp_adp: 0,
+        bs_adp: 0,
+        fp_ecr: 0,
+        bs_ecr: 0,
+        avg_adp: 0,
+        avg_ecr: 0,
       });
     }
   }
