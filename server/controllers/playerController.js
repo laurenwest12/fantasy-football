@@ -20,7 +20,9 @@ const playerController = {
     try {
       const players = await Player.findAll({
         where: {
-          position: req.params.position.toUpperCase(),
+          position: {
+            [Op.in]: req.query.positions.split(','),
+          },
           fp_ranking: { [Op.ne]: 0 },
         },
         order: [['fp_ranking', 'ASC']],
