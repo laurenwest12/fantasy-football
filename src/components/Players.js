@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Player from './Player';
+import List from '@mui/material/List';
 
 const Players = () => {
   const [players, setPlayers] = useState([]);
   const [selectedPositions, setSelectedPositions] = useState([]);
+  const [sort, setSort] = useState('');
 
   useEffect(() => {
     fetchData();
-  }, [selectedPositions]);
+  }, [selectedPositions, sort]);
 
   const fetchData = async () => {
     try {
-      const url =
-        selectedPositions.length > 0
-          ? `/api/players/positions/?positions=${selectedPositions.join(',')}`
-          : '/api/players';
+      let url = '/api/players';
+
+      if (selectedPositions.length && sort.length) {
+        url += `?positions=${selectedPositions.join(',')}&sort=${sort}`;
+      } else if (selectedPositions.length) {
+        url += `?positions=${selectedPositions.join(',')}`;
+      } else if (sort.length) {
+        url += `?sort=${sort}`;
+      }
 
       const res = await axios.get(url);
       setPlayers(res.data);
@@ -33,6 +41,10 @@ const Players = () => {
           : [...prevPositions, position]
       );
     }
+  };
+
+  const handleFilterChange = (filter) => {
+    setSort((prevSort) => (prevSort === filter ? '' : filter));
   };
 
   return (
@@ -103,15 +115,26 @@ const Players = () => {
         CLEAR
       </button>
 
+      <div></div>
+      <button
+        value="Name"
+        onClick={() => handleFilterChange('full_name ASC')}
+        style={{
+          backgroundColor: sort.includes('full_name') ? 'green' : 'white',
+          color: sort.includes('full_name') ? 'white' : 'black',
+        }}
+      >
+        Name
+      </button>
       <h1>Player List</h1>
-      <div className="players">
-        {' '}
-        <ul>
-          {players.map((player) => (
-            <li key={player.id}>{player.full_name}</li>
-          ))}
-        </ul>
-      </div>
+      <List
+        dense
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+      >
+        {players.map((player) => (
+          <Player key={player.id} player={player} />
+        ))}
+      </List>
     </div>
   );
 };

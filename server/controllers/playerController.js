@@ -3,12 +3,24 @@ const { Op } = require('sequelize');
 
 const playerController = {
   getAllPlayers: async (req, res) => {
+    let positions = req.query?.positions;
+    let sort = req.query?.sort;
     try {
+      let where = {
+        avg_ranking: { [Op.ne]: 0 },
+      };
+
+      let order = [['avg_ranking', 'ASC']];
+      if (sort) order[0] = sort.split(' ');
+
+      if (positions)
+        where['position'] = {
+          [Op.in]: positions.split(','),
+        };
+
       const players = await Player.findAll({
-        where: {
-          avg_ranking: { [Op.ne]: 0 },
-        },
-        order: [['avg_ranking', 'ASC']],
+        where,
+        order,
       });
       res.json(players);
     } catch (err) {
@@ -23,9 +35,9 @@ const playerController = {
           position: {
             [Op.in]: req.query.positions.split(','),
           },
-          fp_ranking: { [Op.ne]: 0 },
+          avg_ranking: { [Op.ne]: 0 },
         },
-        order: [['fp_ranking', 'ASC']],
+        order: [['avg_ranking', 'ASC']],
       });
       res.json(players);
     } catch (err) {
