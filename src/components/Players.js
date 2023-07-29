@@ -3,6 +3,11 @@ import axios from 'axios';
 import Player from './Player';
 import List from '@mui/material/List';
 import socketIOClient from 'socket.io-client';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const Players = () => {
   const [players, setPlayers] = useState([]);
@@ -60,6 +65,10 @@ const Players = () => {
 
   const handleFilterChange = (filter) => {
     setSort((prevSort) => (prevSort === filter ? '' : filter));
+  };
+
+  const filterByTier = (players, tier) => {
+    return players.filter((player) => player.fp_tier === tier);
   };
 
   return (
@@ -142,14 +151,41 @@ const Players = () => {
         Name
       </button>
       <h1>Player List</h1>
-      <List
-        dense
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-      >
-        {players.map((player) => (
-          <Player key={player.id} player={player} />
-        ))}
-      </List>
+      {Array.from(Array(16).keys()).map((i) => (
+        <Accordion defaultExpanded={true}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <Typography>Tier {i + 1}</Typography>
+            </div>
+          </AccordionSummary>
+          <AccordionDetails>
+            {filterByTier(players, i + 1).map((player) => (
+              <Player key={player.id} player={player} />
+            ))}
+          </AccordionDetails>
+        </Accordion>
+        // <ListItem key={player.id}>
+        //   <ListItemText>{player.full_name}</ListItemText>
+        //   <ListItemText>{player.bye}</ListItemText>
+        // </ListItem>
+        // <div>
+        //   <div>Tier {i + 1}</div>
+        //   <List
+        //     dense
+        //     sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+        //   >
+        //     {filterByTier(players, i + 1).map((player) => (
+        //       <Player key={player.id} player={player} />
+        //     ))}
+        //   </List>
+        // </div>
+      ))}
     </div>
   );
 };
