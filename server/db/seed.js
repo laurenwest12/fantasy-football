@@ -40,6 +40,37 @@ const insertPicks = async () => {
   }
 };
 
+const insertPicksWithDelay = async (io) => {
+  const picks = await getDraftPicks(process.env.DRAFT_ID);
+  for (let pick of picks) {
+    const { player_id } = pick;
+    const player = await Player.findOne({
+      where: {
+        id: player_id,
+      },
+    });
+
+    const playerId = player.dataValues.id;
+
+    pick = {
+      ...pick,
+      playerId,
+    };
+
+    await Pick.create(pick);
+
+    const newPlayer = await Player.findOne({
+      where: {
+        id: player_id,
+      },
+      include: Pick,
+    });
+
+    io.emit('updatePlayer', newPlayer.toJSON());
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+};
+
 const insertRingerData = async () => {
   const errors = [];
   const { qbs, rbs, tes, wrs } = ringerData;
@@ -229,13 +260,15 @@ const syncAndSeed = async () => {
   await db.authenticate();
   // await db.sync({ force: true });
   // await insertPlayers();
-  // await insertPicks();
+  // // await insertPicks();
   // await insertFPData();
-  // await insertRingerData()
+  // await insertRingerData();
   // await insertOtherRankingData();
-  await calculateAvg();
+  // await calculateAvg();
+  // console.log('Finished seeding');
 };
 
 module.exports = {
   syncAndSeed,
+  insertPicksWithDelay,
 };

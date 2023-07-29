@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Player from './Player';
 import List from '@mui/material/List';
+import socketIOClient from 'socket.io-client';
 
 const Players = () => {
   const [players, setPlayers] = useState([]);
@@ -10,6 +11,20 @@ const Players = () => {
 
   useEffect(() => {
     fetchData();
+
+    const socket = socketIOClient('http://localhost:3001');
+    socket.on('updatePlayer', (updatedPlayerData) => {
+      setPlayers((prevPlayers) => {
+        const updatedPlayers = prevPlayers.map((player) =>
+          player.id === updatedPlayerData.id ? updatedPlayerData : player
+        );
+        return updatedPlayers;
+      });
+    });
+
+    return () => {
+      socket.disconnect(); // Clean up the WebSocket connection on component unmount
+    };
   }, [selectedPositions, sort]);
 
   const fetchData = async () => {

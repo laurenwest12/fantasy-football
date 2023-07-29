@@ -21,6 +21,7 @@ const Player = ({ player }) => {
           <Typography>{player.full_name}</Typography>
           <Typography>{player.position}</Typography>
           <Typography>{player.bye}</Typography>
+          <Typography>{player.picks.length}</Typography>
         </div>
       </AccordionSummary>
       <AccordionDetails>
