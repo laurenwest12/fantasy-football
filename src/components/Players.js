@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Player from './Player';
-import List from '@mui/material/List';
 import socketIOClient from 'socket.io-client';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const Players = () => {
   const [players, setPlayers] = useState([]);
   const [selectedPositions, setSelectedPositions] = useState([]);
-  const [sort, setSort] = useState('');
+  const [sort, setSort] = useState('avg_ranking ASC');
 
   useEffect(() => {
     fetchData();
@@ -53,7 +58,7 @@ const Players = () => {
 
   const handlePositionChange = (position) => {
     if (position === '') {
-      setSelectedPositions(['QB', 'WR', 'RB', 'TE', 'DEF', 'K']);
+      setSelectedPositions([]);
     } else {
       setSelectedPositions((prevPositions) =>
         prevPositions.includes(position)
@@ -73,68 +78,90 @@ const Players = () => {
 
   return (
     <div>
-      <button
-        value="QB"
-        onClick={() => handlePositionChange('QB')}
-        style={{
-          backgroundColor: selectedPositions.includes('QB') ? 'green' : 'white',
-          color: selectedPositions.includes('QB') ? 'white' : 'black',
-        }}
-      >
-        QB
-      </button>
-      <button
-        value="WR"
-        onClick={() => handlePositionChange('WR')}
-        style={{
-          backgroundColor: selectedPositions.includes('WR') ? 'green' : 'white',
-          color: selectedPositions.includes('WR') ? 'white' : 'black',
-        }}
-      >
-        WR
-      </button>
-      <button
-        value="RB"
-        onClick={() => handlePositionChange('RB')}
-        style={{
-          backgroundColor: selectedPositions.includes('RB') ? 'green' : 'white',
-          color: selectedPositions.includes('RB') ? 'white' : 'black',
-        }}
-      >
-        RB
-      </button>
-      <button
-        value="TE"
-        onClick={() => handlePositionChange('TE')}
-        style={{
-          backgroundColor: selectedPositions.includes('TE') ? 'green' : 'white',
-          color: selectedPositions.includes('TE') ? 'white' : 'black',
-        }}
-      >
-        TE
-      </button>
-      <button
-        value="DEF"
-        onClick={() => handlePositionChange('DEF')}
-        style={{
-          backgroundColor: selectedPositions.includes('DEF')
-            ? 'green'
-            : 'white',
-          color: selectedPositions.includes('DEF') ? 'white' : 'black',
-        }}
-      >
-        DEF
-      </button>
-      <button
-        value="K"
-        onClick={() => handlePositionChange('K')}
-        style={{
-          backgroundColor: selectedPositions.includes('K') ? 'green' : 'white',
-          color: selectedPositions.includes('K') ? 'white' : 'black',
-        }}
-      >
-        K
-      </button>
+      <Stack direction="row" spacing={2}>
+        <Button
+          value="QB"
+          variant="outlined"
+          style={{
+            color: selectedPositions.includes('QB') ? '#121212' : '#F92A6D',
+            backgroundColor: selectedPositions.includes('QB')
+              ? '#F92A6D'
+              : '#121212',
+            borderColor: '#F92A6D',
+          }}
+          onClick={() => handlePositionChange('QB')}
+        >
+          QB
+        </Button>
+        <Button
+          value="WR"
+          onClick={() => handlePositionChange('WR')}
+          variant="outlined"
+          style={{
+            color: selectedPositions.includes('WR') ? '#121212' : '#58A8FF',
+            backgroundColor: selectedPositions.includes('WR')
+              ? '#58A8FF'
+              : '#121212',
+            borderColor: '#58A8FF',
+          }}
+        >
+          WR
+        </Button>
+        <Button
+          value="RB"
+          onClick={() => handlePositionChange('RB')}
+          variant="outlined"
+          style={{
+            color: selectedPositions.includes('RB') ? '#121212' : '#2FCAB5',
+            backgroundColor: selectedPositions.includes('RB')
+              ? '#2FCAB5'
+              : '#121212',
+            borderColor: '#2FCAB5',
+          }}
+        >
+          RB
+        </Button>
+        <Button
+          value="TE"
+          onClick={() => handlePositionChange('TE')}
+          variant="outlined"
+          style={{
+            color: selectedPositions.includes('TE') ? '#121212' : '#FBAE58',
+            backgroundColor: selectedPositions.includes('TE')
+              ? '#FBAE58'
+              : '#121212',
+            borderColor: '#FBAE58',
+          }}
+        >
+          TE
+        </Button>
+        <Button
+          value="DEF"
+          onClick={() => handlePositionChange('DEF')}
+          variant="outlined"
+          style={{
+            color: selectedPositions.includes('DEF') ? '#121212' : '#58A8FF',
+            backgroundColor: selectedPositions.includes('DEF')
+              ? '#58A8FF'
+              : '#121212',
+          }}
+        >
+          DEF
+        </Button>
+        <Button
+          value="K"
+          onClick={() => handlePositionChange('K')}
+          variant="outlined"
+          style={{
+            color: selectedPositions.includes('K') ? '#121212' : '#58A8FF',
+            backgroundColor: selectedPositions.includes('K')
+              ? '#58A8FF'
+              : '#121212',
+          }}
+        >
+          K
+        </Button>
+      </Stack>
       <button value="" onClick={() => handlePositionChange('')}>
         CLEAR
       </button>
@@ -150,42 +177,42 @@ const Players = () => {
       >
         Name
       </button>
-      <h1>Player List</h1>
-      {Array.from(Array(16).keys()).map((i) => (
-        <Accordion defaultExpanded={true}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                width: '100%',
-              }}
-            >
-              <Typography>Tier {i + 1}</Typography>
-            </div>
-          </AccordionSummary>
-          <AccordionDetails>
-            {filterByTier(players, i + 1).map((player) => (
-              <Player key={player.id} player={player} />
-            ))}
-          </AccordionDetails>
-        </Accordion>
-        // <ListItem key={player.id}>
-        //   <ListItemText>{player.full_name}</ListItemText>
-        //   <ListItemText>{player.bye}</ListItemText>
-        // </ListItem>
-        // <div>
-        //   <div>Tier {i + 1}</div>
-        //   <List
-        //     dense
-        //     sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-        //   >
-        //     {filterByTier(players, i + 1).map((player) => (
-        //       <Player key={player.id} player={player} />
-        //     ))}
-        //   </List>
-        // </div>
-      ))}
+      <Paper sx={{ width: '100%' }}>
+        <TableContainer className="players" sx={{ maxHeight: 1000 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead className="players__header">
+              <TableRow>
+                <TableCell align="center" colSpan={5}>
+                  Player Info
+                </TableCell>
+                <TableCell align="center" colSpan={4}>
+                  Rankings
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell width="50" className="sort">
+                  Rank
+                </TableCell>
+                <TableCell width="36"></TableCell>
+                <TableCell width="200" align="left">
+                  Name
+                </TableCell>
+                <TableCell align="left">Position</TableCell>
+                <TableCell align="left">Bye</TableCell>
+                <TableCell align="left">ESPN</TableCell>
+                <TableCell align="left">NFL</TableCell>
+                <TableCell align="left">Yahoo</TableCell>
+                <TableCell align="left">FP</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {players.map((player) => (
+                <Player key={player.id} player={player} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
     </div>
   );
 };
