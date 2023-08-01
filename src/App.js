@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import Players from './components/Players';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { lime, purple } from '@mui/material/colors';
 
 const darkTheme = createTheme({
   palette: {
@@ -11,11 +12,11 @@ const darkTheme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={darkTheme}>
-      <div className="App">
-        <Players />
-      </div>
-    </ThemeProvider>
+    // <ThemeProvider theme={darkTheme}>
+    <div className="App">
+      <Players />
+    </div>
+    // </ThemeProvider>
   );
 }
 
