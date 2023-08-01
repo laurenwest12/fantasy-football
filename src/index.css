@@ -186,6 +186,7 @@ td {
 .wr__selected {
   background-color: #58a8ff;
   color: #fff;
+  border: 0;
 }
 
 .rb {
@@ -195,6 +196,7 @@ td {
 .rb__selected {
   background-color: #2fcab5;
   color: #fff;
+  border: 0;
 }
 
 .te {
@@ -204,6 +206,7 @@ td {
 .te__selected {
   background-color: #fbae58;
   color: #fff;
+  border: 0;
 }
 
 .def {
@@ -213,6 +216,7 @@ td {
 .def__selected {
   background-color: #c480e8;
   color: #fff;
+  border: 0;
 }
 
 .k {
@@ -222,4 +226,44 @@ td {
 .k__selected {
   background-color: #f5e679;
   color: #fff;
+  border: 0;
+}
+
+/* Players expanded details */
+.expanded__heading {
+  font-size: 15px;
+  margin-left: 50px;
+}
+
+.roster {
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  gap: 0px 10px;
+}
+
+.roster:first-child {
+  margin-left: 50px;
+}
+
+.roster__position {
+  grid-column: 1;
+  grid-row: span 2;
+  font-weight: 700;
+}
+
+.roster__name {
+  grid-column: 1;
+  font-weight: 400;
+}
+
+.roster__position:last-child {
+  margin-bottom: 15px; /* Adjust the gap as desired */
+}
+
+.injury {
+  margin-left: 50px;
+}
+
+.injury__body {
+  font-weight: 400;
 }

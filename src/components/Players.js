@@ -173,7 +173,7 @@ const Players = () => {
               <th colspan="5" className="players__table__grouping">
                 ADP
               </th>
-              <th colspan="5" className="players__table__grouping">
+              <th colspan="6" className="players__table__grouping">
                 VAL
               </th>
             </tr>
@@ -224,11 +224,12 @@ const Players = () => {
               <th>YAHOO</th>
               <th>FP</th>
               <th>AVG</th>
+              <th></th>
             </tr>
             {Object.entries(groupPlayersByTier()).map(([tier, tierPlayers]) => (
               <React.Fragment key={tier}>
                 <tr>
-                  <th colSpan="21" className="tier">
+                  <th colSpan="22" className="tier">
                     TIER {tier}
                   </th>
                 </tr>
