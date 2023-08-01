@@ -4,19 +4,36 @@ const Papa = require('papaparse');
 const { Op } = require('sequelize');
 
 const db = require('./db');
-const { Pick, Player } = require('./models/index');
+const { Pick, Player, Team } = require('./models/index');
 
 const { ringerData } = require('../data/theringer');
 
 const { getDraftPicks, getPlayers } = require('../sleeper');
 
-const insertPlayers = async () => {
-  const players = await getPlayers();
-  for (let i = 0; i < players.length; ++i) {
-    const player = players[i];
-    await Player.create(player);
-  }
-};
+// const insertPlayers = async () => {
+//   const players = await getPlayers();
+//   for (let i = 0; i < players.length; ++i) {
+//     const player = players[i];
+//     if (player.team) {
+//       const existingTeam = await Team.findOne({
+//         where: {
+//           team: player.team,
+//         },
+//       });
+
+//       if (existingTeam) {
+//         const depth = player.depth_chart_order
+//         const position = player.depth_chart_position
+//         let updateObj = {}
+//       } else {
+//         // const newTeam = await Team.create({
+//         //   team: player.team
+//         // })
+//       }
+//     }
+//     //await Player.create(player);
+//   }
+// };
 
 const insertPicks = async () => {
   const picks = await getDraftPicks(process.env.DRAFT_ID);
@@ -258,8 +275,8 @@ const calculateAvg = async () => {
 
 const syncAndSeed = async () => {
   await db.authenticate();
-  // await db.sync({ force: true });
-  // await insertPlayers();
+  await db.sync({ force: true });
+  await insertPlayers();
   // // await insertPicks();
   // await insertFPData();
   // await insertRingerData();

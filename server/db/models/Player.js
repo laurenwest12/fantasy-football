@@ -147,43 +147,58 @@ const Player = db.define('player', {
   personal_tier: {
     type: Sequelize.INTEGER,
   },
-  ringer_tier: {
+  espn_tier: {
     type: Sequelize.INTEGER,
   },
   fp_tier: {
     type: Sequelize.INTEGER,
   },
-  bs_tier: {
+  nfl_tier: {
+    type: Sequelize.INTEGER,
+  },
+  ringer_tier: {
+    type: Sequelize.INTEGER,
+  },
+  yahoo_tier: {
+    type: Sequelize.INTEGER,
+  },
+  avg_tier: {
     type: Sequelize.INTEGER,
   },
   personal_pos_tier: {
     type: Sequelize.INTEGER,
   },
-  ringer_pos_tier: {
+  espn_pos_tier: {
     type: Sequelize.INTEGER,
   },
   fp_pos_tier: {
     type: Sequelize.INTEGER,
   },
-  bs_pos_tier: {
+  nfl_pos_tier: {
+    type: Sequelize.INTEGER,
+  },
+  ringer_pos_tier: {
+    type: Sequelize.INTEGER,
+  },
+  yahoo_pos_tier: {
+    type: Sequelize.INTEGER,
+  },
+  avg_pos_tier: {
     type: Sequelize.INTEGER,
   },
   personal_ranking: {
     type: Sequelize.INTEGER,
   },
-  ringer_ranking: {
+  espn_ranking: {
     type: Sequelize.INTEGER,
   },
   fp_ranking: {
     type: Sequelize.INTEGER,
   },
-  bs_ranking: {
-    type: Sequelize.INTEGER,
-  },
-  espn_ranking: {
-    type: Sequelize.INTEGER,
-  },
   nfl_ranking: {
+    type: Sequelize.INTEGER,
+  },
+  ringer_ranking: {
     type: Sequelize.INTEGER,
   },
   yahoo_ranking: {
@@ -192,22 +207,25 @@ const Player = db.define('player', {
   avg_ranking: {
     type: Sequelize.INTEGER,
   },
+  espn_adp: {
+    type: Sequelize.INTEGER,
+  },
   fp_adp: {
     type: Sequelize.INTEGER,
   },
-  bs_adp: {
+  nfl_adp: {
+    type: Sequelize.INTEGER,
+  },
+  ringer_adp: {
+    type: Sequelize.INTEGER,
+  },
+  sleeper_adp: {
+    type: Sequelize.INTEGER,
+  },
+  yahoo_adp: {
     type: Sequelize.INTEGER,
   },
   avg_adp: {
-    type: Sequelize.INTEGER,
-  },
-  fp_ecr: {
-    type: Sequelize.INTEGER,
-  },
-  bs_ecr: {
-    type: Sequelize.INTEGER,
-  },
-  avg_ecr: {
     type: Sequelize.INTEGER,
   },
 });
