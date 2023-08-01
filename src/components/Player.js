@@ -8,7 +8,8 @@ import Paper from '@mui/material/Paper';
 
 const Player = ({ player }) => {
   const isPicked = player.picks && player.picks.length > 0;
-  const playerClassName = `player ${isPicked ? 'picked' : ''}`;
+  const playerClassName = `player${isPicked ? ' picked' : ''}`;
+  const imageClassName = `player__image${isPicked ? '__picked' : ''}`;
   const playerImgUrl = `https://sleepercdn.com/content/nfl/players/thumb/${player.id}.jpg`;
   const positionClass = `position ${player.position.toLowerCase()}${
     isPicked ? '__picked' : ''
@@ -16,11 +17,11 @@ const Player = ({ player }) => {
 
   return (
     <tr className={playerClassName}>
-      <td>{player.avg_ranking}</td>
+      <td style={{ width: '25px' }}>{player.avg_ranking}</td>
       <td>
-        <img src={playerImgUrl} className="player__image" />
+        <img src={playerImgUrl} className={imageClassName} />
       </td>
-      <td>{player.full_name}</td>
+      <td style={{ width: '200px' }}>{player.full_name}</td>
       <td className={positionClass}>{player.position}</td>
       <td>{player.age}</td>
       <td>{player.bye}</td>
