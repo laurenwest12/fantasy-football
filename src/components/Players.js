@@ -58,8 +58,16 @@ const Players = () => {
     }
   };
 
-  const filterByTier = (players, tier) => {
-    return players.filter((player) => player.fp_tier === tier);
+  const groupPlayersByTier = () => {
+    const groupedPlayers = {};
+    players.forEach((player) => {
+      const tier = player.fp_tier;
+      if (!groupedPlayers[tier]) {
+        groupedPlayers[tier] = [];
+      }
+      groupedPlayers[tier].push(player);
+    });
+    return groupedPlayers;
   };
 
   if (display === 'list') {
@@ -217,8 +225,17 @@ const Players = () => {
               <th>FP</th>
               <th>AVG</th>
             </tr>
-            {players.map((player) => (
-              <Player key={player.id} player={player} />
+            {Object.entries(groupPlayersByTier()).map(([tier, tierPlayers]) => (
+              <React.Fragment key={tier}>
+                <tr>
+                  <th colSpan="21" className="tier">
+                    TIER {tier}
+                  </th>
+                </tr>
+                {tierPlayers.map((player) => (
+                  <Player key={player.id} player={player} tier={tier} />
+                ))}
+              </React.Fragment>
             ))}
           </table>
         </div>

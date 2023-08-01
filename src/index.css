@@ -105,6 +105,15 @@ td {
   padding: 7px 4px;
 }
 
+.tier {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-align: left;
+  background-color: #024637;
+  border: 1px solid #024637;
+}
+
 .player {
   text-align: left;
   font-size: 14px;
@@ -113,9 +122,21 @@ td {
   font-weight: 550;
 }
 
+.player__expanded {
+  text-align: left;
+  font-size: 14px;
+  color: #166856;
+  border: 1px solid #166856;
+  font-weight: 550;
+}
+
+.even {
+  background-color: #e8f1ef;
+}
+
 .picked {
-  color: #425a54;
-  background-color: #719990;
+  color: #717171;
+  background-color: #bbb9b9;
 }
 
 .player__image {
