@@ -16,18 +16,39 @@ code {
 
 /* Players container */
 .players__container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 25vw 1fr;
+  height: 100vh;
 }
 
 .players__filters {
-  width: 25vw;
+  font-size: 18px;
+  font-weight: 700;
+  color: #166856;
+  height: 100px;
+  margin-top: 75%;
 }
 
 .players__table {
+  overflow-y: auto;
   width: 75vw;
 }
 
 /* Filters */
+.filters__views {
+  margin-bottom: 10px;
+}
+
+.views__option {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 2px 1px;
+}
+
+.views__option:hover {
+  cursor: pointer;
+}
+
 .players__filter {
   border: 0;
   border-radius: 50%;
@@ -46,11 +67,18 @@ code {
 
 /* Players table headers */
 .players__table__grouping {
+  z-index: 1;
   color: #166856;
+  position: sticky;
+  top: 0;
   border: 1px solid #166856;
+  background-color: #fff;
 }
 
 .players__table__header {
+  z-index: 1;
+  position: sticky;
+  top: 20px;
   font-size: 12px;
   background-color: #166856;
   color: #fff;

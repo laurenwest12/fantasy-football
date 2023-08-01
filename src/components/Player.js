@@ -42,32 +42,6 @@ const Player = ({ player }) => {
       <td>{player.avg_adp - player.avg_ranking || '-'}</td>
     </tr>
   );
-
-  // return (
-  //   <TableRow
-  //     className={playerClassName}
-  //     over
-  //     role="checkbox"
-  //     tabIndex={-1}
-  //     key={player.id}
-  //   >
-  //     <TableCell component="th" scope="row">
-  //       {player.avg_ranking}
-  //     </TableCell>
-  //     <TableCell>
-  //       <img className="player__image" src={playerImgUrl} />
-  //     </TableCell>
-  //     <TableCell align="left">{player.full_name}</TableCell>
-  //     <TableCell align="left">
-  //       <div className={positionClass}>{player.position}</div>
-  //     </TableCell>
-  //     <TableCell align="left">{player.bye}</TableCell>
-  //     <TableCell align="left">{player.espn_ranking}</TableCell>
-  //     <TableCell align="left">{player.nfl_ranking}</TableCell>
-  //     <TableCell align="left">{player.yahoo_ranking}</TableCell>
-  //     <TableCell align="left">{player.fp_ranking}</TableCell>
-  //   </TableRow>
-  // );
 };
 
 export default Player;
