@@ -28,22 +28,25 @@ const Player = ({ player, tier }) => {
         <td style={{ width: '200px' }}>{player.full_name}</td>
         <td className={positionClass}>{player.position}</td>
         <td>{player.age}</td>
-        <td>{player.bye}</td>
+        <td style={{ borderRight: '1px solid' }}>{player.bye}</td>
         <td>{player.personal_ranking}</td>
         <td>{player.espn_ranking}</td>
         <td>{player.nfl_ranking}</td>
         <td>{player.yahoo_ranking}</td>
-        <td>{player.fp_ranking}</td>
-        <td>{player.espn_adp}</td>
-        <td>{player.nfl_adp}</td>
-        <td>{player.yahoo_adp}</td>
-        <td>{player.fp_adp}</td>
-        <td>{player.avg_adp}</td>
-        <td>{player.espn_adp - player.espn_ranking || '-'}</td>
-        <td>{player.nfl_adp - player.nfl_ranking || '-'}</td>
-        <td>{player.yahoo_adp - player.yahoo_ranking || '-'}</td>
-        <td>{player.fp_adp - player.fp_ranking || '-'}</td>
-        <td>{player.avg_adp - player.avg_ranking || '-'}</td>
+        <td>{player.ringer_ranking}</td>
+        <td style={{ borderRight: '1px solid' }}>{player.fp_ranking}</td>
+        <td>{Math.round(player.espn_adp)}</td>
+        <td>{Math.round(player.nfl_adp)}</td>
+        <td>{Math.round(player.yahoo_adp)}</td>
+        <td>{Math.round(player.fp_adp)}</td>
+        <td style={{ borderRight: '1px solid' }}>
+          {Math.round(player.avg_adp)}
+        </td>
+        <td>{Math.round(player.espn_adp - player.espn_ranking) || '-'}</td>
+        <td>{Math.round(player.nfl_adp - player.nfl_ranking) || '-'}</td>
+        <td>{Math.round(player.yahoo_adp - player.yahoo_ranking) || '-'}</td>
+        <td>{Math.round(player.fp_adp - player.fp_ranking) || '-'}</td>
+        <td>{Math.round(player.avg_adp - player.avg_ranking) || '-'}</td>
         <td>{expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}</td>
       </tr>
       {expanded && (
@@ -53,35 +56,46 @@ const Player = ({ player, tier }) => {
             <div className="roster">
               <div style={{ marginLeft: '50px' }}>
                 <div className="roster__position">QB</div>
-                <div className="roster__name">Joe Burrow</div>
-                <div className="roster__name">Trevor Siemian</div>
+                {player.team.qb &&
+                  Object.entries(player.team.qb)
+                    .sort((a, b) => a[1] - b[1])
+                    .map((qb) => <div className="roster__name">{qb[0]}</div>)}
               </div>
               <div>
                 <div className="roster__position">RB</div>
-                <div className="roster__name">Joe Mixon</div>
-                <div className="roster__name">Chase Brown</div>
+                {player.team.rb &&
+                  Object.entries(player.team.rb)
+                    .sort((a, b) => a[1] - b[1])
+                    .map((rb) => <div className="roster__name">{rb[0]}</div>)}
               </div>
               <div>
                 <div className="roster__position">WR1</div>
-                <div className="roster__name">Ja'Marr Chase</div>
-                <div className="roster__name">Charlie Jones</div>
+                {player.team.wr1 &&
+                  Object.entries(player.team.wr1)
+                    .sort((a, b) => a[1] - b[1])
+                    .map((wr1) => <div className="roster__name">{wr1[0]}</div>)}
               </div>
               <div>
                 <div className="roster__position">WR2</div>
-                <div className="roster__name">Tee Higgins</div>
-                <div className="roster__name">Stanley Morgan</div>
+                {player.team.wr2 &&
+                  Object.entries(player.team.wr2)
+                    .sort((a, b) => a[1] - b[1])
+                    .map((wr2) => <div className="roster__name">{wr2[0]}</div>)}
               </div>
               <div>
                 <div className="roster__position">WR3</div>
-                <div className="roster__name">Tyler Boyd</div>
+                {player.team.wr3 &&
+                  Object.entries(player.team.wr3)
+                    .sort((a, b) => a[1] - b[1])
+                    .map((wr3) => <div className="roster__name">{wr3[0]}</div>)}
               </div>
-
               <div>
                 <div className="roster__position">TE</div>
-                <div className="roster__name">Irv Smith</div>
-                <div className="roster__name">Nick Bowers</div>
-                <div className="roster__name">Devin Asiasi</div>
-              </div>
+                {player.team.te &&
+                  Object.entries(player.team.te)
+                    .sort((a, b) => a[1] - b[1])
+                    .map((te) => <div className="roster__name">{te[0]}</div>)}
+              </div>{' '}
             </div>
             <div className="injury">
               <div>INJURY STATUS</div>
@@ -90,6 +104,11 @@ const Player = ({ player, tier }) => {
                 <div>{player.injury_body_part}</div>
                 <div>{player.injury_start_date}</div>
               </div>
+            </div>
+
+            <div className="tiers">
+              <div>{player.fp_tier}</div>
+              <div>{player.ringer_tier}</div>
             </div>
           </td>
         </tr>

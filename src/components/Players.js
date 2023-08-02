@@ -61,12 +61,18 @@ const Players = () => {
   const groupPlayersByTier = () => {
     const groupedPlayers = {};
     players.forEach((player) => {
-      const tier = player.fp_tier;
+      const tier = player.avg_tier;
       if (!groupedPlayers[tier]) {
         groupedPlayers[tier] = [];
       }
       groupedPlayers[tier].push(player);
     });
+
+    if (groupedPlayers[0]) {
+      const noTier = groupedPlayers[0];
+      groupedPlayers['null'] = noTier;
+      delete groupedPlayers[0];
+    }
     return groupedPlayers;
   };
 
@@ -164,7 +170,7 @@ const Players = () => {
         <div className="players__table">
           <table style={{ borderCollapse: 'collapse' }}>
             <tr className="players__table__groupings">
-              <th colspan="5" className="players__table__grouping">
+              <th colspan="6" className="players__table__grouping">
                 INFO
               </th>
               <th colspan="6" className="players__table__grouping">
@@ -212,16 +218,83 @@ const Players = () => {
               >
                 NFL
               </th>
-              <th>YAHOO</th>
-              <th>FP</th>
+              <th
+                onClick={() => setSort('yahoo_ranking ASC')}
+                style={{
+                  textDecoration:
+                    sort === 'yahoo_ranking ASC' ? 'underline' : '',
+                  fontWeight: sort === 'yahoo_ranking ASC' ? '900' : '700',
+                }}
+              >
+                YAH
+              </th>
+              <th
+                onClick={() => setSort('ringer_ranking ASC')}
+                style={{
+                  textDecoration:
+                    sort === 'ringer_ranking ASC' ? 'underline' : '',
+                  fontWeight: sort === 'ringer_ranking ASC' ? '900' : '700',
+                }}
+              >
+                RING
+              </th>
+              <th
+                onClick={() => setSort('fp_ranking ASC')}
+                style={{
+                  textDecoration: sort === 'fp_ranking ASC' ? 'underline' : '',
+                  fontWeight: sort === 'fp_ranking ASC' ? '900' : '700',
+                }}
+              >
+                FP
+              </th>
+              <th
+                onClick={() => setSort('espn_adp ASC')}
+                style={{
+                  textDecoration: sort === 'espn_adp ASC' ? 'underline' : '',
+                  fontWeight: sort === 'espn_adp ASC' ? '900' : '700',
+                }}
+              >
+                ESPN
+              </th>
+              <th
+                onClick={() => setSort('nfl_adp ASC')}
+                style={{
+                  textDecoration: sort === 'nfl_adp ASC' ? 'underline' : '',
+                  fontWeight: sort === 'nfl_adp ASC' ? '900' : '700',
+                }}
+              >
+                NFL
+              </th>
+              <th
+                onClick={() => setSort('yahoo_adp ASC')}
+                style={{
+                  textDecoration: sort === 'yahoo_adp ASC' ? 'underline' : '',
+                  fontWeight: sort === 'yahoo_adp ASC' ? '900' : '700',
+                }}
+              >
+                YAH
+              </th>
+              <th
+                onClick={() => setSort('fp_adp ASC')}
+                style={{
+                  textDecoration: sort === 'fp_adp ASC' ? 'underline' : '',
+                  fontWeight: sort === 'fp_adp ASC' ? '900' : '700',
+                }}
+              >
+                FP
+              </th>
+              <th
+                onClick={() => setSort('avg_adp ASC')}
+                style={{
+                  textDecoration: sort === 'avg_adp ASC' ? 'underline' : '',
+                  fontWeight: sort === 'avg_adp ASC' ? '900' : '700',
+                }}
+              >
+                AVG
+              </th>
               <th>ESPN</th>
               <th>NFL</th>
-              <th>YAHOO</th>
-              <th>FP</th>
-              <th>AVG</th>
-              <th>ESPN</th>
-              <th>NFL</th>
-              <th>YAHOO</th>
+              <th>YAH</th>
               <th>FP</th>
               <th>AVG</th>
               <th></th>
@@ -229,7 +302,7 @@ const Players = () => {
             {Object.entries(groupPlayersByTier()).map(([tier, tierPlayers]) => (
               <React.Fragment key={tier}>
                 <tr>
-                  <th colSpan="22" className="tier">
+                  <th colSpan="23" className="tier">
                     TIER {tier}
                   </th>
                 </tr>

@@ -1,4 +1,4 @@
-const { Player, Pick } = require('../db/models/index');
+const { Player, Pick, Team } = require('../db/models/index');
 const { Op } = require('sequelize');
 
 const playerController = {
@@ -21,7 +21,7 @@ const playerController = {
       const players = await Player.findAll({
         where,
         order,
-        include: Pick,
+        include: [Pick, Team],
       });
       res.json(players);
     } catch (err) {

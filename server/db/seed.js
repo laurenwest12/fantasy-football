@@ -6,7 +6,7 @@ const { Op } = require('sequelize');
 const db = require('./db');
 const { Pick, Player, Team } = require('./models/index');
 
-const { ringerData } = require('../data/theringer');
+const { ringerData, ringerDataWithTotalTiers } = require('../data/theringer');
 
 const { getDraftPicks, getPlayers } = require('../sleeper');
 
@@ -133,11 +133,11 @@ const insertPicksWithDelay = async (io) => {
 
 const insertRingerData = async () => {
   const errors = [];
-  const { qbs, rbs, tes, wrs } = ringerData;
+  const { qbs, rbs, tes, wrs } = ringerDataWithTotalTiers();
 
   const insert = async (data, type) => {
     for (let i = 0; i < data.length; ++i) {
-      let { name, pos, rank, tier } = data[i];
+      let { name, pos, rank, tier, total_tier } = data[i];
       name = name.replace(' Jr.', '');
       name = name.replace(' III', '');
 
@@ -150,6 +150,7 @@ const insertRingerData = async () => {
 
         await player.update({
           ringer_pos_tier: tier,
+          ringer_tier: total_tier,
           ringer_ranking: rank,
         });
       } catch (err) {
@@ -325,6 +326,11 @@ const calculateAvg = async () => {
     let num_ranking = 0;
     let total_adp = 0;
     let num_adp = 0;
+    let total_tier = 0;
+    let total_pos_tier = 0;
+    let num_total_tier = 0;
+    let num_pos_tier = 0;
+
     const {
       personal_ranking,
       espn_ranking,
@@ -337,6 +343,12 @@ const calculateAvg = async () => {
       nfl_adp,
       sleeper_adp,
       yahoo_adp,
+      personal_tier,
+      fp_tier,
+      ringer_tier,
+      personal_pos_tier,
+      fp_pos_tier,
+      ringer_pos_tier,
     } = player;
 
     total_ranking +=
@@ -354,6 +366,9 @@ const calculateAvg = async () => {
       parseFloat(sleeper_adp) +
       parseFloat(yahoo_adp);
 
+    total_tier += personal_tier + fp_tier + ringer_tier;
+    total_pos_tier += personal_pos_tier + fp_pos_tier + ringer_pos_tier;
+
     if (personal_ranking) num_ranking++;
     if (ringer_ranking) num_ranking++;
     if (fp_ranking) num_ranking++;
@@ -367,13 +382,29 @@ const calculateAvg = async () => {
     if (sleeper_adp) num_adp++;
     if (yahoo_adp) num_adp++;
 
-    let avg_ranking = Math.floor(total_ranking / num_ranking);
+    if (personal_tier) num_total_tier++;
+    if (fp_tier) num_total_tier++;
+    if (ringer_tier) num_total_tier++;
+
+    if (personal_pos_tier) num_pos_tier++;
+    if (fp_pos_tier) num_pos_tier++;
+    if (ringer_pos_tier) num_pos_tier++;
+
+    let avg_ranking = Math.round(total_ranking / num_ranking);
     let avg_adp = total_adp / num_adp;
+    let avg_tier = total_tier / num_total_tier;
+    let avg_pos_tier = total_pos_tier / num_pos_tier;
+
     if (!avg_ranking) avg_ranking = 0;
     if (!avg_adp) avg_adp = 0;
+    if (!avg_tier) avg_tier = null;
+    if (!avg_pos_tier) avg_pos_tier = null;
+
     player.update({
       avg_ranking: avg_ranking,
       avg_adp: avg_adp,
+      avg_tier: Math.round(avg_tier),
+      avg_pos_tier: Math.round(avg_pos_tier),
     });
   }
 };
