@@ -10,30 +10,73 @@ const { ringerData } = require('../data/theringer');
 
 const { getDraftPicks, getPlayers } = require('../sleeper');
 
-// const insertPlayers = async () => {
-//   const players = await getPlayers();
-//   for (let i = 0; i < players.length; ++i) {
-//     const player = players[i];
-//     if (player.team) {
-//       const existingTeam = await Team.findOne({
-//         where: {
-//           team: player.team,
-//         },
-//       });
+const insertPlayers = async () => {
+  const players = await getPlayers();
+  for (let i = 0; i < players.length; ++i) {
+    const player = players[i];
+    const { full_name, depth_chart_order, depth_chart_position } = player;
+    let updateObj = {};
+    let position;
 
-//       if (existingTeam) {
-//         const depth = player.depth_chart_order
-//         const position = player.depth_chart_position
-//         let updateObj = {}
-//       } else {
-//         // const newTeam = await Team.create({
-//         //   team: player.team
-//         // })
-//       }
-//     }
-//     //await Player.create(player);
-//   }
-// };
+    switch (depth_chart_position) {
+      case 'QB':
+        position = 'qb';
+        break;
+      case 'RB':
+        position = 'rb';
+        break;
+      case 'LWR':
+        position = 'wr1';
+        break;
+      case 'RWR':
+        position = 'wr2';
+        break;
+      case 'SWR':
+        position = 'wr3';
+        break;
+      case 'TE':
+        position = 'te';
+        break;
+    }
+
+    if (player.team) {
+      const existingTeam = await Team.findOne({
+        where: {
+          team: player.team,
+        },
+      });
+
+      if (existingTeam) {
+        const currentPosition = existingTeam.dataValues[position];
+        updateObj[position] = {
+          ...currentPosition,
+          [full_name]: depth_chart_order,
+        };
+        await existingTeam.update(updateObj);
+        await Player.create({
+          ...player,
+          teamName: player.team,
+          teamId: existingTeam.dataValues.id,
+        });
+      } else {
+        updateObj[position] = {
+          [full_name]: depth_chart_order,
+        };
+        const newTeam = await Team.create({
+          team: player.team,
+        });
+        await newTeam.update(updateObj);
+        await Player.create({
+          ...player,
+          teamName: player.team,
+          teamId: newTeam.dataValues.id,
+        });
+      }
+    } else {
+      await Player.create(player);
+    }
+  }
+};
 
 const insertPicks = async () => {
   const picks = await getDraftPicks(process.env.DRAFT_ID);
@@ -97,8 +140,6 @@ const insertRingerData = async () => {
       let { name, pos, rank, tier } = data[i];
       name = name.replace(' Jr.', '');
       name = name.replace(' III', '');
-
-      const pos_ranking = pos.replace(type, '');
 
       try {
         const player = await Player.findOne({
@@ -167,7 +208,6 @@ const insertFPData = async () => {
           await player.update({
             fp_ranking: RK,
             fp_tier: TIERS,
-            fp_ecr: RK,
           });
 
           if (ADP && ADP !== '#VALUE!') await player.update({ fp_adp: ADP });
@@ -233,54 +273,125 @@ const insertOtherRankingData = async () => {
   }
 };
 
+const insertADPData = async () => {
+  const files = fs
+    .readdirSync(path.resolve(__dirname, '../data'))
+    .filter((file) => file.indexOf('ADP') !== -1);
+
+  const filename = files[0];
+  const csv = fs.readFileSync(
+    path.resolve(__dirname, `../data/${filename}`),
+    'utf8'
+  );
+  const { data } = Papa.parse(csv, {
+    header: true,
+  });
+
+  for (let row of data) {
+    let { nflName, NFL, Yahoo, ESPN, SleepHalf, FPHalf } = row;
+
+    nflName = nflName.replace(' Jr.', '');
+    nflName = nflName.replace(' III', '');
+    nflName = nflName.replace(' II', '');
+    nflName = nflName.replace(' D/ST', '');
+    nflName = nflName.replace(' IR', '');
+    nflName = nflName.replace(' Sr.', '');
+
+    const player = await Player.findOne({
+      where: {
+        full_name: {
+          [Op.like]: '%' + nflName + '%',
+        },
+      },
+    });
+
+    if (player) {
+      let updateObj = {};
+      if (NFL && NFL !== '#N/A') updateObj.nfl_adp = parseFloat(NFL);
+      if (Yahoo && Yahoo !== '#N/A') updateObj.yahoo_adp = parseFloat(Yahoo);
+      if (ESPN && ESPN !== '#N/A') updateObj.espn_adp = parseFloat(ESPN);
+      if (SleepHalf && SleepHalf !== '#N/A')
+        updateObj.sleeper_adp = parseFloat(SleepHalf);
+      if (FPHalf && FPHalf !== '#N/A') updateObj.fp_adp = parseFloat(FPHalf);
+      await player.update(updateObj);
+    }
+  }
+};
+
 const calculateAvg = async () => {
   const players = await Player.findAll();
   for (let player of players) {
     let total_ranking = 0;
     let num_ranking = 0;
+    let total_adp = 0;
+    let num_adp = 0;
     const {
       personal_ranking,
-      ringer_ranking,
-      fp_ranking,
-      bs_ranking,
       espn_ranking,
+      fp_ranking,
       nfl_ranking,
+      ringer_ranking,
       yahoo_ranking,
+      espn_adp,
+      fp_adp,
+      nfl_adp,
+      sleeper_adp,
+      yahoo_adp,
     } = player;
 
     total_ranking +=
       personal_ranking +
       ringer_ranking +
       fp_ranking +
-      bs_ranking +
       espn_ranking +
       nfl_ranking +
       yahoo_ranking;
 
+    total_adp +=
+      parseFloat(espn_adp) +
+      parseFloat(fp_adp) +
+      parseFloat(nfl_adp) +
+      parseFloat(sleeper_adp) +
+      parseFloat(yahoo_adp);
+
     if (personal_ranking) num_ranking++;
     if (ringer_ranking) num_ranking++;
     if (fp_ranking) num_ranking++;
-    if (bs_ranking) num_ranking++;
     if (espn_ranking) num_ranking++;
     if (nfl_ranking) num_ranking++;
     if (yahoo_ranking) num_ranking++;
 
+    if (espn_adp) num_adp++;
+    if (fp_adp) num_adp++;
+    if (nfl_adp) num_adp++;
+    if (sleeper_adp) num_adp++;
+    if (yahoo_adp) num_adp++;
+
     let avg_ranking = Math.floor(total_ranking / num_ranking);
+    let avg_adp = total_adp / num_adp;
     if (!avg_ranking) avg_ranking = 0;
+    if (!avg_adp) avg_adp = 0;
     player.update({
       avg_ranking: avg_ranking,
+      avg_adp: avg_adp,
     });
   }
 };
 
 const syncAndSeed = async () => {
   await db.authenticate();
-  await db.sync({ force: true });
-  await insertPlayers();
+  // await db.sync({ alter: true });
+  // await insertPlayers();
+  // console.log('Players inserted');
   // // await insertPicks();
   // await insertFPData();
+  // console.log('FP inserted');
   // await insertRingerData();
+  // console.log('Ringer inserted');
   // await insertOtherRankingData();
+  // console.log('Other inserted');
+  // await insertADPData();
+  // console.log('ADP inserted');
   // await calculateAvg();
   // console.log('Finished seeding');
 };

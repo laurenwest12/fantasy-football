@@ -111,7 +111,7 @@ const Player = db.define('player', {
   birth_state: {
     type: Sequelize.STRING,
   },
-  team: {
+  teamName: {
     type: Sequelize.STRING,
   },
   search_first_name: {
@@ -208,25 +208,22 @@ const Player = db.define('player', {
     type: Sequelize.INTEGER,
   },
   espn_adp: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.DECIMAL(10, 2),
   },
   fp_adp: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.DECIMAL(10, 2),
   },
   nfl_adp: {
-    type: Sequelize.INTEGER,
-  },
-  ringer_adp: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.DECIMAL(10, 2),
   },
   sleeper_adp: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.DECIMAL(10, 2),
   },
   yahoo_adp: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.DECIMAL(10, 2),
   },
   avg_adp: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.DECIMAL(10, 2),
   },
 });
 

@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
 const db = require('../db');
 
-const Team = db.define('pick', {
-  uid: {
+const Team = db.define('team', {
+  id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
@@ -11,35 +11,45 @@ const Team = db.define('pick', {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  qb: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+  teamCity: {
+    type: Sequelize.STRING,
     allowNull: false,
-    defaultValue: [],
+    defaultValue: '',
+  },
+  teamName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    defaultValue: '',
+  },
+  qb: {
+    type: Sequelize.JSON,
+    allowNull: false,
+    defaultValue: {},
   },
   rb: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+    type: Sequelize.JSON,
     allowNull: false,
-    defaultValue: [],
+    defaultValue: {},
   },
   wr1: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+    type: Sequelize.JSON,
     allowNull: false,
-    defaultValue: [],
+    defaultValue: {},
   },
   wr2: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+    type: Sequelize.JSON,
     allowNull: false,
-    defaultValue: [],
+    defaultValue: {},
   },
   wr3: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+    type: Sequelize.JSON,
     allowNull: false,
-    defaultValue: [],
+    defaultValue: {},
   },
   te: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+    type: Sequelize.JSON,
     allowNull: false,
-    defaultValue: [],
+    defaultValue: {},
   },
 });
 
