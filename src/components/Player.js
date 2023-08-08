@@ -105,11 +105,6 @@ const Player = ({ player, tier }) => {
                 <div>{player.injury_start_date}</div>
               </div>
             </div>
-
-            <div className="tiers">
-              <div>{player.fp_tier}</div>
-              <div>{player.ringer_tier}</div>
-            </div>
           </td>
         </tr>
       )}

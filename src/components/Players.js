@@ -8,6 +8,7 @@ const Players = () => {
   const [selectedPositions, setSelectedPositions] = useState([]);
   const [sort, setSort] = useState('avg_ranking ASC');
   const [display, setDisplay] = useState('list');
+  const [tierFilter, setTierFilter] = useState('avg_tier');
 
   useEffect(() => {
     fetchData();
@@ -59,27 +60,74 @@ const Players = () => {
   };
 
   const groupPlayersByTier = () => {
-    const groupedPlayers = {};
-    players.forEach((player) => {
-      const tier = player.avg_tier;
-      if (!groupedPlayers[tier]) {
-        groupedPlayers[tier] = [];
-      }
-      groupedPlayers[tier].push(player);
-    });
+    if (tierFilter) {
+      const groupedPlayers = {};
+      players.forEach((player) => {
+        const tier = player[tierFilter];
+        if (!groupedPlayers[tier]) {
+          groupedPlayers[tier] = [];
+        }
+        groupedPlayers[tier].push(player);
+      });
 
-    if (groupedPlayers[0]) {
-      const noTier = groupedPlayers[0];
-      groupedPlayers['null'] = noTier;
-      delete groupedPlayers[0];
+      if (groupedPlayers[0]) {
+        const noTier = groupedPlayers[0];
+        groupedPlayers['null'] = noTier;
+        delete groupedPlayers[0];
+      }
+      return groupedPlayers;
+    } else {
+      return { ALL: players };
     }
-    return groupedPlayers;
   };
 
   if (display === 'list') {
     return (
       <div className="players__container">
         <div className="players__filters">
+          <div className="views__header">TIERS</div>
+          <div className="filters__views">
+            <div
+              className="views__option"
+              style={{
+                fontWeight: tierFilter === 'avg_tier' ? 550 : 400,
+                textDecoration: tierFilter === 'avg_tier' ? 'underline' : '',
+              }}
+              onClick={() => setTierFilter('avg_tier')}
+            >
+              AVG
+            </div>
+            <div
+              className="views__option"
+              style={{
+                fontWeight: tierFilter === 'fp_tier' ? 550 : 400,
+                textDecoration: tierFilter === 'fp_tier' ? 'underline' : '',
+              }}
+              onClick={() => setTierFilter('fp_tier')}
+            >
+              FP
+            </div>
+            <div
+              className="views__option"
+              style={{
+                fontWeight: tierFilter === 'ringer_tier' ? 550 : 400,
+                textDecoration: tierFilter === 'ringer_tier' ? 'underline' : '',
+              }}
+              onClick={() => setTierFilter('ringer_tier')}
+            >
+              RING
+            </div>
+            <div
+              className="views__option"
+              style={{
+                fontWeight: tierFilter === '' ? 550 : 400,
+                textDecoration: tierFilter === '' ? 'underline' : '',
+              }}
+              onClick={() => setTierFilter('')}
+            >
+              NONE
+            </div>
+          </div>
           <div className="views__header">VIEW BY</div>
           <div className="filters__views">
             <div
