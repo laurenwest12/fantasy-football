@@ -40,7 +40,7 @@ const Board = ({ picks }) => {
         </div>
         <div className="board__row__2">
           <div className="pick__team">
-            {pick.player.teamName} - {pick.player.position}
+            {pick.player.teamName || 'FA'} - {pick.player.position}
           </div>
           <div className="pick__round">
             {pick.round} - {pick.pick_no - (pick.round - 1) * users.length}
