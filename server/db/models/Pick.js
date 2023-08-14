@@ -19,6 +19,10 @@ const Pick = db.define('pick', {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  picked_by_name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   pick_no: {
     type: Sequelize.INTEGER,
     allowNull: false,

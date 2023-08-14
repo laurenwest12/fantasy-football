@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const Papa = require('papaparse');
+const axios = require('axios');
 const { Op } = require('sequelize');
 
 const db = require('./db');
@@ -75,59 +76,6 @@ const insertPlayers = async () => {
     } else {
       await Player.create(player);
     }
-  }
-};
-
-const insertPicks = async () => {
-  const picks = await getDraftPicks(process.env.DRAFT_ID);
-  for (let i = 0; i < picks.length; ++i) {
-    let pick = picks[i];
-    const { player_id } = pick;
-    const player = await Player.findOne({
-      where: {
-        id: player_id,
-      },
-    });
-
-    const playerId = player.dataValues.id;
-
-    pick = {
-      ...pick,
-      playerId,
-    };
-
-    await Pick.create(pick);
-  }
-};
-
-const insertPicksWithDelay = async (io) => {
-  const picks = await getDraftPicks(process.env.DRAFT_ID);
-  for (let pick of picks) {
-    const { player_id } = pick;
-    const player = await Player.findOne({
-      where: {
-        id: player_id,
-      },
-    });
-
-    const playerId = player.dataValues.id;
-
-    pick = {
-      ...pick,
-      playerId,
-    };
-
-    await Pick.create(pick);
-
-    const newPlayer = await Player.findOne({
-      where: {
-        id: player_id,
-      },
-      include: Pick,
-    });
-
-    io.emit('updatePlayer', newPlayer.toJSON());
-    await new Promise((resolve) => setTimeout(resolve, 5000));
   }
 };
 
@@ -409,12 +357,77 @@ const calculateAvg = async () => {
   }
 };
 
+const insertPicks = async () => {
+  const picks = await getDraftPicks(process.env.DRAFT_ID);
+  for (let i = 0; i < picks.length; ++i) {
+    let pick = picks[i];
+    const { player_id, picked_by } = pick;
+    const player = await Player.findOne({
+      where: {
+        id: player_id,
+      },
+    });
+
+    const { data } = await axios.get(
+      `https://api.sleeper.app/v1/user/${picked_by}`
+    );
+    const { username } = data;
+
+    const playerId = player.dataValues.id;
+
+    pick = {
+      ...pick,
+      picked_by_name: username,
+      playerId,
+    };
+
+    await Pick.create(pick);
+  }
+};
+
+const insertPicksWithDelay = async (io) => {
+  const picks = await getDraftPicks(process.env.DRAFT_ID);
+  for (let pick of picks) {
+    const { player_id, picked_by } = pick;
+    const player = await Player.findOne({
+      where: {
+        id: player_id,
+      },
+    });
+
+    const { data } = await axios.get(
+      `https://api.sleeper.app/v1/user/${picked_by}`
+    );
+    const { username } = data;
+
+    const playerId = player.dataValues.id;
+
+    pick = {
+      ...pick,
+      picked_by_name: username,
+      playerId,
+    };
+
+    await Pick.create(pick);
+
+    const newPlayer = await Player.findOne({
+      where: {
+        id: player_id,
+      },
+      include: Pick,
+    });
+
+    io.emit('updatePlayer', newPlayer.toJSON());
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+};
+
 const syncAndSeed = async () => {
   await db.authenticate();
-  // await db.sync({ alter: true });
+  await db.sync({ alter: true });
   // await insertPlayers();
   // console.log('Players inserted');
-  // // await insertPicks();
+  // await insertPicks();
   // await insertFPData();
   // console.log('FP inserted');
   // await insertRingerData();

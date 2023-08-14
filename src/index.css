@@ -91,6 +91,10 @@ code {
   padding-right: 10px;
 }
 
+.players__table__sort {
+  cursor: pointer;
+}
+
 .sort {
   display: flex;
   justify-content: center;
@@ -266,4 +270,82 @@ td {
 
 .injury__body {
   font-weight: 400;
+}
+
+/* draft board */
+.board {
+  border-spacing: 7px;
+  border-collapse: separate;
+  table-layout: fixed;
+  width: 90vw;
+}
+
+.board__users,
+.pick {
+  margin: 5px;
+  width: 300px;
+}
+
+.pick {
+  position: relative;
+  border-radius: 10px;
+  padding: 10px;
+  height: 70px;
+}
+
+.board__row__1 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.board__row__2 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pick__name {
+  text-align: left;
+  font-weight: 700;
+  padding-right: 5px;
+  width: 50px;
+}
+
+.pick__bye {
+  text-align: right;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.pick__round {
+  text-align: right;
+  font-size: 12px;
+}
+
+.pick__team {
+  text-align: left;
+  font-size: 12px;
+}
+
+.board__qb {
+  background-color: #f92a6d;
+}
+
+.board__wr {
+  background-color: #58a8ff;
+}
+
+.board__rb {
+  background-color: #2fcab5;
+}
+
+.board__te {
+  background-color: #fbae58;
+}
+
+.board__def {
+  background-color: #c480e8;
+}
+
+.board__k {
+  background-color: #f5e679;
 }

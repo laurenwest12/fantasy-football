@@ -42,8 +42,10 @@ app.use(cors());
 
 // Routes
 const playersRoutes = require('./routes/players');
+const pickRoutes = require('./routes/picks');
 
 app.use('/api/players', playersRoutes);
+app.use('/api/picks', pickRoutes);
 
 const io = createSocketServer(server);
 
