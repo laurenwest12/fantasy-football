@@ -104,7 +104,7 @@ const Players = () => {
         let postitionTier = `${filteredTier[0]}_pos_${filteredTier[1]}`;
         let tier = player[postitionTier];
 
-        if (tier === 0) tier = 'None';
+        if (tier === 0) tier = 'NONE';
         if (!positionObj[position][tier]) {
           positionObj[position][tier] = [];
         }

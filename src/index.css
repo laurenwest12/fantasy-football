@@ -359,10 +359,38 @@ td {
 }
 
 .tiers__container {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(
     auto-fit,
     minmax(250px, 1fr)
   ); /* Adjust the column width as needed */
   gap: 20px; /* Adjust the gap between columns */
+}
+
+.tier__player__picked {
+  text-decoration: line-through;
+}
+
+.overlay-visible::before {
+  content: '';
+  position: fixed;
+  top: 50;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  z-index: 999; /* Adjust z-index as needed */
+}
+
+.popup {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 1000; /* Ensure the popup is above the overlay */
+}
+
+.popup-trigger {
+  display: inline-block;
 }
