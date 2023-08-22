@@ -280,6 +280,14 @@ td {
   width: 90vw;
 }
 
+.board__users {
+  position: sticky;
+  top: 0;
+  top: 0;
+  background-color: #fff; /* Set the background color you want for the fixed row */
+  z-index: 1;
+}
+
 .board__users,
 .pick {
   margin: 5px;

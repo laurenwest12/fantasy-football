@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Player from './Player';
 import Board from './Board';
+import Tiers from './Tiers';
 import socketIOClient from 'socket.io-client';
 
 const Players = () => {
@@ -86,7 +87,57 @@ const Players = () => {
     }
   };
 
-  const Tiers = () => (
+  const getPlayersByPositionAndTier = (players) => {
+    const positionObj = {
+      QB: {},
+      RB: {},
+      WR: {},
+      TE: {},
+      DEF: {},
+      K: {},
+    };
+
+    players.forEach((player) => {
+      const { position } = player;
+      if (tierFilter) {
+        let filteredTier = tierFilter.split('_');
+        let postitionTier = `${filteredTier[0]}_pos_${filteredTier[1]}`;
+        let tier = player[postitionTier];
+
+        if (tier === 0) tier = 'None';
+        if (!positionObj[position][tier]) {
+          positionObj[position][tier] = [];
+        }
+        positionObj[position][tier].push(player);
+      } else {
+        if (!positionObj[position]['ALL']) positionObj[position]['ALL'] = [];
+        positionObj[position]['ALL'].push(player);
+      }
+    });
+    // if (tierFilter) {
+    //   const groupedPlayers = {};
+    //   players.forEach((player) => {
+    //     const tier = player[tierFilter];
+    //     if (!groupedPlayers[tier]) {
+    //       groupedPlayers[tier] = [];
+    //     }
+    //     groupedPlayers[tier].push(player);
+    //   });
+
+    //   if (groupedPlayers[0]) {
+    //     const noTier = groupedPlayers[0];
+    //     groupedPlayers['null'] = noTier;
+    //     delete groupedPlayers[0];
+    //   }
+    //   return groupedPlayers;
+    // } else {
+    //   return { ALL: players };
+    // }
+
+    return positionObj;
+  };
+
+  const TiersFilter = () => (
     <div className="views__header">
       <div>TIERS</div>
       <div className="filters__views">
@@ -134,7 +185,7 @@ const Players = () => {
     </div>
   );
 
-  const Views = () => (
+  const ViewsFilter = () => (
     <div className="views__header">
       <div>VIEW BY</div>
       <div className="filters__views">
@@ -172,7 +223,7 @@ const Players = () => {
     </div>
   );
 
-  const Positions = () => (
+  const PositionsFilter = () => (
     <div className="filters__position">
       <div>
         <div>POSITION</div>
@@ -244,9 +295,9 @@ const Players = () => {
     return (
       <div className="players__container">
         <div className="players__filters">
-          <Tiers />
-          <Views />
-          <Positions />
+          <TiersFilter />
+          <ViewsFilter />
+          <PositionsFilter />
         </div>
         <div className="players__table">
           <table style={{ borderCollapse: 'collapse' }}>
@@ -411,20 +462,22 @@ const Players = () => {
     return (
       <div className="players__container">
         <div className="players__filters">
-          <Tiers />
-          <Views />
-          <Positions />
+          <TiersFilter />
+          <ViewsFilter />
+          <PositionsFilter />
         </div>
-        <div className="players__table"></div>
+        <div className="players__table">
+          <Tiers players={getPlayersByPositionAndTier(players)} />
+        </div>
       </div>
     );
   } else {
     return (
       <div className="draft__container">
         <div className="draft__filters">
-          <Tiers />
-          <Views />
-          <Positions />
+          <TiersFilter />
+          <ViewsFilter />
+          <PositionsFilter />
         </div>
         <div className="draft__table">
           <Board picks={picks} />
