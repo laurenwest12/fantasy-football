@@ -357,3 +357,12 @@ td {
 .board__k {
   background-color: #f5e679;
 }
+
+.tiers__container {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  ); /* Adjust the column width as needed */
+  gap: 20px; /* Adjust the gap between columns */
+}
